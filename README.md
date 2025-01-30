@@ -205,7 +205,7 @@ Note: AWS Flow Logs store the protocol as a numeric (IANA protocol number). For 
 - 1 = ICMP (and so on).
 
 ### 2. Understanding the Lookup Table
-We are given a CSV file with three columns:
+A CSV file with three columns:
 
 dstport,protocol,tag
 
@@ -231,43 +231,50 @@ For example:
 - tag: The label to apply if a flow record matches this (dstport, protocol) pair.
   
 ##### Case Insensitivity
-The matching should be case-insensitive, meaning:
+The matching should be case-insensitive:
 
 The protocol in the CSV might appear as tcp, Tcp, TCP, etc., and it should be treated the same.
-The protocol from the flow log is numeric, so we will convert numeric to a lower-case text form (6 -> tcp, 17 -> udp, 1 -> icmp, etc.) before lookup.
+The protocol from the flow log is numeric, so it's better to convert numeric to a lower-case text form (6 -> tcp, 17 -> udp, 1 -> icmp, etc.) before lookup.
 
 ### 3. What the program does
 
 Read/Parse the flow log file line by line.
-For each line (flow record), extract the dstport (7th field) and the protocol (8th field).
+For each line (flow record), extract the dstport and the protocol.
 
 Convert the protocol number from the flow record to a textual protocol:
+
 Example mapping:
 6 -> tcp
 17 -> udp
 1 -> icmp
+
 This mapping can be expanded as needed if other protocol numbers appear.
 
-Read/Parse the lookup CSV file into an in-memory structure (e.g., a dictionary or map) for quick lookups:
+Read/Parse the lookup CSV file into an in-memory structure (e.g., a dictionary) for quick lookups:
+
 Key: (dstport, protocol) pair (both as strings or integers, consistently).
 Value: tag
-Make sure to convert protocol to lowercase for case-insensitive matching.
+Convert protocol to lowercase for case-insensitive matching.
+
 Perform the lookup for each flow record:
 Form the (dstport, protocol) pair. (Convert protocol to text, e.g., 6 -> "tcp")
 Check if that pair is in your lookup dictionary.
-If yes, get the corresponding tag.
-If not, the tag is "Untagged".
+- If yes, get the corresponding tag.
+- If not, the tag is "Untagged".
 
 Maintain two sets of counts:
+
 Tag Counts: how many flow records ended up in a given tag.
 Example: {"sv_P1": 2, "sv_P2": 1, "email": 3, "Untagged": 9, ...}
+
 Port/Protocol Combination Counts: how many times a (dstport, protocol-text) combination appears regardless of the tag.
 Example: {"(23, tcp)": 1, "(25, tcp)": 1, "(443, tcp)": 1, ...}
-At the end, output two reports (in plain text or CSV):
+
+At the end, output two reports (in plain text:
 Tag Counts (the summary of how many records got each tag).
 Port/Protocol Combination Counts (the summary of how many times each unique (dstport, protocol-text) pair occurred).
 
-4. Sample Output Explanation
+### 4. Sample Output Explanation
 From the sample logs, you might see an output like this (just an example):
 
 Tag Counts:
@@ -304,22 +311,18 @@ email matched 3 times (for (110, tcp), (993, tcp), (143, tcp)).
 Untagged matched 9 times (flows whose (dstport,protocol) did not appear in the CSV lookup).
 Port/Protocol Combination Counts simply lists every unique (dstport, protocol) that appeared in the flow logs and how many times it appeared. This count is independent of whether or not that combination had a matching tag.
 
-5. Handling Edge Cases and Assumptions
-Flow Log Version
-
-The sample problem states we’re only dealing with version 2 logs (the default format). We are not handling custom formats or other versions.
-Protocol Number to Name Mapping
+### 5. Handling Edge Cases and Assumptions
 
 We need to maintain a small mapping, for example:
 6 -> tcp
 17 -> udp
 1 -> icmp
 etc.
+
 If the log file has protocol numbers that are not recognized, you can either:
 Tag them as "Untagged", or
 Log a warning and skip them, or
 (Depending on your design) treat them as a literal numeric protocol.
-The problem states “matches should be case insensitive,” which primarily applies to the CSV’s protocol field (tcp, UDP, etc.). When you convert the numeric code from the log into a string ("tcp", "udp", etc.), make sure you do so in a consistent (e.g. lower-case) manner.
 
 ## References & Further Reading
 
