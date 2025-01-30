@@ -89,8 +89,8 @@ Example: python3 FlowLogsParser.py /Users/basanthyajman/Downloads/flow_logs.txt 
 
 Expected Console Output:
 
-- Will write results to: /Users/basanthyajman/Downloads/results.txt
-- Writing results to: /Users/basanthyajman/Downloads/results.txt
+- Will write results to: /Users/Username/Downloads/results.txt
+- Writing results to: /Users/Username/Downloads/results.txt
 - Output successfully written.
 
 ### Step 3: View Results
