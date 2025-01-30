@@ -140,7 +140,6 @@ Port,Protocol,Count
 443,tcp,15
 80,tcp,20
 25,tcp,10
-...
 
 ## Testing & Validation
 
@@ -148,10 +147,10 @@ Port,Protocol,Count
 We provide test_flow_log_parser.py using Python’s built-in unittest framework.
 
 ## Test Cases
-✅ Validates CSV parsing (including duplicate rules).
-✅ Ensures case-insensitivity (tcp vs. TCP).
-✅ Checks unknown protocols default to numeric representation.
-✅ Handles missing/invalid flow log fields gracefully.
+- ✅ Validates CSV parsing (including duplicate rules).
+- ✅ Ensures case-insensitivity (tcp vs. TCP).
+- ✅ Checks unknown protocols default to numeric representation.
+- ✅ Handles missing/invalid flow log fields gracefully.
 
 ## Assumptions & Limitations
 
@@ -161,6 +160,6 @@ We provide test_flow_log_parser.py using Python’s built-in unittest framework.
 
 ## References & Further Reading
 
-📖 [AWS VPC Flow Logs Documentation][https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html]
-📖 [IANA Protocol Numbers][https://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml]
-📖 [Python Official Docs][https://docs.python.org/3/]
+- 📖 [AWS VPC Flow Logs Documentation][https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html]
+- 📖 [IANA Protocol Numbers][https://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml]
+- 📖 [Python Official Docs][https://docs.python.org/3/]
