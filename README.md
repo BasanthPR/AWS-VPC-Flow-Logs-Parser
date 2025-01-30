@@ -144,9 +144,6 @@ Port,Protocol,Count
 
 ## Testing & Validation
 
-## Unit Tests
-We provide test_flow_log_parser.py using Python’s built-in unittest framework.
-
 ## Test Cases
 - ✅ Validates CSV parsing (including duplicate rules).
 - ✅ Ensures case-insensitivity (tcp vs. TCP).
