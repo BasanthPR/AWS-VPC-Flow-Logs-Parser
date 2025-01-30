@@ -57,5 +57,5 @@ AWS VPC Flow Logs record network traffic at the **Elastic Network Interface (ENI
 ### Step 1: Clone or Download the Repository
 
 ```bash
-git clone https://github.com/<your-username>/<repo-name>.git
-cd <repo-name>
+git clone https://github.com/BasanthPR/AWS-VPC-Flow-Logs-Parser.git
+cd AWS-VPC-Flow-Logs-Parser
