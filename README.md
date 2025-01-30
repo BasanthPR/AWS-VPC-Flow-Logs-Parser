@@ -111,9 +111,13 @@ Which are : dstport,protocol,tag
 ### Example CSV
 
 # Comment lines (ignored by parser)
+
 25,tcp,email
+
 443,tcp,secure
+
 80,tcp,web
+
 23,tcp,legacy
 
 ### Example Inputs/Outputs
@@ -129,17 +133,25 @@ If (49153, "tcp") is not in the CSV, it is labeled "Untagged".
 ### Example Output
 
 Tag Counts:
+
 -Tag,Count
+
 -secure,15
+
 -web,20
+
 -email,10
+
 -Untagged,5
 
 Port/Protocol Combination Counts:
 
 -Port,Protocol,Count
+
 -443,tcp,15
+
 -80,tcp,20
+
 -25,tcp,10
 
 ## Testing & Validation
