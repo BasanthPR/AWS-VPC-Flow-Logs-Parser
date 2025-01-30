@@ -13,8 +13,9 @@
 6. [Lookup CSV Format](#lookup-csv-format)  
 7. [Example Inputs/Outputs](#example-inputsoutputs)  
 8. [Testing & Validation](#testing--validation)  
-9. [Assumptions & Limitations](#assumptions--limitations)   
-10. [References & Further Reading](#references--further-reading) 
+9. [Assumptions & Limitations](#assumptions--limitations)
+10. [Author's Explanation](#authors-explanation)  
+11. [References & Further Reading](#references--further-reading) 
 
 ---
 
@@ -160,6 +161,165 @@ Port,Protocol,Count
 1. Only Supports AWS Flow Log Version 2 (14 default fields).
 2. Unsupported Protocols: Unrecognized numbers (e.g., 999) remain numeric.
 3. Duplicate CSV Entries: The last occurrence of (dstport, protocol) in lookup.csv overrides earlier ones.
+
+## Author's Explanation
+
+Here, I describe my thought process, design decisions, and the rationale behind certain implementation details.
+
+### 1. Understanding the AWS VPC Flow Logs (Version 2) Format
+A typical version 2 AWS VPC Flow Log record looks like this (fields are space-delimited):
+
+version account-id interface-id srcaddr dstaddr srcport dstport protocol packets bytes start end action log-status
+
+For example (one line from the sample logs):
+
+2 123456789012 eni-0a1b2c3d 10.0.1.201 198.51.100.2 443 49153 6 25 20000 1620140761 1620140821 ACCEPT OK
+
+Breaking this down by column:
+
+| Field         | Value         |
+|---------------|---------------|
+| version       | 2             |
+| account-id    | 123456789012  |
+| interface-id  | eni-0a1b2c3d  |
+| srcaddr       | 10.0.1.201    |
+| dstaddr       | 198.51.100.2  |
+| srcport       | 443           |
+| dstport       | 49153         |
+| protocol      | 6             |
+| packets       | 25            |
+| bytes         | 20000         |
+| start         | 1620140761    |
+| end           | 1620140821    |
+| action        | ACCEPT        |
+| log-status    | OK            |
+
+#### Important Fields for Tagging
+
+dstport is at position 7
+protocol is at position 8
+Note: AWS Flow Logs store the protocol as a numeric (IANA protocol number). For example:
+
+- 6 = TCP
+- 17 = UDP
+- 1 = ICMP (and so on).
+
+### 2. Understanding the Lookup Table
+We are given a CSV file with three columns:
+
+dstport,protocol,tag
+
+For example:
+
+
+| dstport | protocol | tag    |
+|---------|----------|--------|
+| 25      | tcp      | sv_P1  |
+| 68      | udp      | sv_P2  |
+| 23      | tcp      | sv_P1  |
+| 31      | udp      | SV_P3  |
+| 443     | tcp      | sv_P2  |
+| 22      | tcp      | sv_P4  |
+| 3389    | tcp      | sv_P5  |
+| 0       | icmp     | sv_P5  |
+| 110     | tcp      | email  |
+| 993     | tcp      | email  |
+| 143     | tcp      | email  |
+
+- dstport: The numeric port to match on.
+- protocol: A textual representation (tcp, udp, icmp, etc.).
+- tag: The label to apply if a flow record matches this (dstport, protocol) pair.
+  
+##### Case Insensitivity
+The matching should be case-insensitive, meaning:
+
+The protocol in the CSV might appear as tcp, Tcp, TCP, etc., and it should be treated the same.
+The protocol from the flow log is numeric, so we will convert numeric to a lower-case text form (6 -> tcp, 17 -> udp, 1 -> icmp, etc.) before lookup.
+
+### 3. What the program does
+
+Read/Parse the flow log file line by line.
+For each line (flow record), extract the dstport (7th field) and the protocol (8th field).
+
+Convert the protocol number from the flow record to a textual protocol:
+Example mapping:
+6 -> tcp
+17 -> udp
+1 -> icmp
+This mapping can be expanded as needed if other protocol numbers appear.
+
+Read/Parse the lookup CSV file into an in-memory structure (e.g., a dictionary or map) for quick lookups:
+Key: (dstport, protocol) pair (both as strings or integers, consistently).
+Value: tag
+Make sure to convert protocol to lowercase for case-insensitive matching.
+Perform the lookup for each flow record:
+Form the (dstport, protocol) pair. (Convert protocol to text, e.g., 6 -> "tcp")
+Check if that pair is in your lookup dictionary.
+If yes, get the corresponding tag.
+If not, the tag is "Untagged".
+
+Maintain two sets of counts:
+Tag Counts: how many flow records ended up in a given tag.
+Example: {"sv_P1": 2, "sv_P2": 1, "email": 3, "Untagged": 9, ...}
+Port/Protocol Combination Counts: how many times a (dstport, protocol-text) combination appears regardless of the tag.
+Example: {"(23, tcp)": 1, "(25, tcp)": 1, "(443, tcp)": 1, ...}
+At the end, output two reports (in plain text or CSV):
+Tag Counts (the summary of how many records got each tag).
+Port/Protocol Combination Counts (the summary of how many times each unique (dstport, protocol-text) pair occurred).
+
+4. Sample Output Explanation
+From the sample logs, you might see an output like this (just an example):
+
+Tag Counts:
+
+Tag,Count
+sv_P2,1
+sv_P1,2
+sv_P4,1
+email,3
+Untagged,9
+
+Port/Protocol Combination Counts:
+
+Port,Protocol,Count
+22,tcp,1
+23,tcp,1
+25,tcp,1
+110,tcp,1
+143,tcp,1
+443,tcp,1
+993,tcp,1
+1024,tcp,1
+49158,tcp,1
+80,tcp,1
+
+Explanation:
+
+Tag Counts shows that:
+
+sv_P2 was matched once (likely for a (443, tcp) record).
+sv_P1 was matched twice (maybe for (25, tcp) and (23, tcp), etc.).
+sv_P4 matched once (perhaps (22, tcp)).
+email matched 3 times (for (110, tcp), (993, tcp), (143, tcp)).
+Untagged matched 9 times (flows whose (dstport,protocol) did not appear in the CSV lookup).
+Port/Protocol Combination Counts simply lists every unique (dstport, protocol) that appeared in the flow logs and how many times it appeared. This count is independent of whether or not that combination had a matching tag.
+
+5. Handling Edge Cases and Assumptions
+Flow Log Version
+
+The sample problem states we’re only dealing with version 2 logs (the default format). We are not handling custom formats or other versions.
+Protocol Number to Name Mapping
+
+We need to maintain a small mapping, for example:
+6 -> tcp
+17 -> udp
+1 -> icmp
+etc.
+If the log file has protocol numbers that are not recognized, you can either:
+Tag them as "Untagged", or
+Log a warning and skip them, or
+(Depending on your design) treat them as a literal numeric protocol.
+The problem states “matches should be case insensitive,” which primarily applies to the CSV’s protocol field (tcp, UDP, etc.). When you convert the numeric code from the log into a string ("tcp", "udp", etc.), make sure you do so in a consistent (e.g. lower-case) manner.
 
 ## References & Further Reading
 
