@@ -160,6 +160,6 @@ We provide test_flow_log_parser.py using Python’s built-in unittest framework.
 
 ## References & Further Reading
 
-- 📖 [AWS VPC Flow Logs Documentation][https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html]
-- 📖 [IANA Protocol Numbers][https://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml]
-- 📖 [Python Official Docs][https://docs.python.org/3/]
+- 📖 [AWS VPC Flow Logs Documentation][https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html].
+- 📖 [IANA Protocol Numbers][https://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml].
+- 📖 [Python Official Docs][https://docs.python.org/3/].
