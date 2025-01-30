@@ -72,7 +72,7 @@ python --version
 
 ### Step 1: Ensure you have the following files:
 
-Flow logs file (flow_logs.txt) – Contains AWS flow logs in default version 2 format.
+Flow logs file (flow_logs.txt) – Contains VPC flow logs in default version 2 format.
 Lookup CSV file (lookup.csv) – Defines (dstport, protocol) → tag mappings.
 
 ### Step 2: Run the Script
@@ -80,7 +80,7 @@ Lookup CSV file (lookup.csv) – Defines (dstport, protocol) → tag mappings.
 Run the parser with: python FlowLogsParser.py <flow_logs_file> <lookup_csv_file> <output_file>
 
 Where:
-- flow_logs_file: Path to the AWS flow logs text file.
+- flow_logs_file: Path to the VPC flow logs text file.
 - lookup_csv_file: Path to your CSV file mapping (dstport, protocol) → tag.
 - output_file: Results are written to this file.
 
