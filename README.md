@@ -13,9 +13,8 @@
 6. [Lookup CSV Format](#lookup-csv-format)  
 7. [Example Inputs/Outputs](#example-inputsoutputs)  
 8. [Testing & Validation](#testing--validation)  
-9. [Assumptions & Limitations](#assumptions--limitations)  
-10. [Known Issues](#known-issues)  
-11. [References & Further Reading](#references--further-reading) 
+9. [Assumptions & Limitations](#assumptions--limitations)   
+10. [References & Further Reading](#references--further-reading) 
 
 ---
 
