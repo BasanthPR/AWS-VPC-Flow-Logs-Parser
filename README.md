@@ -111,8 +111,6 @@ Which are : dstport,protocol,tag
 
 ### Example CSV
 
-#### Comment lines (ignored by parser)
-
 25,tcp,email
 
 443,tcp,secure
