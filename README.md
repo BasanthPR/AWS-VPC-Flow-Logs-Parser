@@ -262,10 +262,10 @@ Check if that pair is in the lookup dictionary.
 
 Maintain two sets of counts:
 
-Tag Counts: how many flow records ended up in a given tag.
+Tag Counts: How many flow records ended up in a given tag.
 Example: {"sv_P1": 2, "sv_P2": 1, "email": 3, "Untagged": 9, ...}
 
-Port/Protocol Combination Counts: how many times a (dstport, protocol-text) combination appears regardless of the tag.
+Port/Protocol Combination Counts: How many times a (dstport, protocol-text) combination appears regardless of the tag.
 Example: {"(23, tcp)": 1, "(25, tcp)": 1, "(443, tcp)": 1, ...}
 
 At the end, output two reports (in plain text:
