@@ -82,7 +82,7 @@ Run the parser with: python FlowLogsParser.py <flow_logs_file> <lookup_csv_file>
 
 Where:
 - flow_logs_file: Path to the VPC flow logs text file.
-- lookup_csv_file: Path to your CSV file mapping (dstport, protocol) → tag.
+- lookup_csv_file: Path to your CSV file mapping.
 - output_file: Results are written to this file.
 
 Example: python3 FlowLogsParser.py /Users/basanthyajman/Downloads/flow_logs.txt /Users/basanthyajman/Downloads/lookup.csv /Users/basanthyajman/Downloads/results.txt
