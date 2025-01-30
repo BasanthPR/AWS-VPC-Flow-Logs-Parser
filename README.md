@@ -258,7 +258,7 @@ Convert protocol to lowercase for case-insensitive matching.
 
 Perform the lookup for each flow record:
 Form the (dstport, protocol) pair. (Convert protocol to text, e.g., 6 -> "tcp")
-Check if that pair is in your lookup dictionary.
+Check if that pair is in the lookup dictionary.
 - If yes, get the corresponding tag.
 - If not, the tag is "Untagged".
 
