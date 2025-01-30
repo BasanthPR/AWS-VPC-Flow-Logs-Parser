@@ -103,7 +103,8 @@ Port/Protocol Combination Counts – Frequency of each (dstport, protocol) pair.
 
 Each row in lookup.csv must have three columns:
 
-<dstport>,<protocol>,<tag>
+- <dstport>,<protocol>,<tag>
+
 - dstport: An integer (80, 443).
 - protocol: Case-insensitive string (tcp, udp).
 - tag: The label to apply (web, secure, email).
