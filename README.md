@@ -77,7 +77,7 @@ Lookup CSV file (lookup.csv) – Defines (dstport, protocol) → tag mappings.
 
 ### Step 2: Run the Script
 
-Run the parser with: python parse_flow_logs.py <flow_logs_file> <lookup_csv_file> <output_file>
+Run the parser with: python FlowLogsParser.py <flow_logs_file> <lookup_csv_file> <output_file>
 
 Where:
 - flow_logs_file: Path to the AWS flow logs text file.
@@ -87,15 +87,16 @@ Where:
 Example: python3 FlowLogsParser.py /Users/basanthyajman/Downloads/flow_logs.txt /Users/basanthyajman/Downloads/lookup.csv /Users/basanthyajman/Downloads/results.txt
 
 Expected Console Output:
-Will write results to: /Users/basanthyajman/Downloads/results.txt
-Writing results to: /Users/basanthyajman/Downloads/results.txt
-Output successfully written.
+
+- Will write results to: /Users/basanthyajman/Downloads/results.txt
+- Writing results to: /Users/basanthyajman/Downloads/results.txt
+- Output successfully written.
 
 ### Step 3: View Results
 Open output_report.txt, which contains:
 
-Tag Counts – Number of logs assigned to each tag.
-Port/Protocol Combination Counts – Frequency of each (dstport, protocol) pair.
+- Tag Counts –> Number of logs assigned to each tag.
+- Port/Protocol Combination Counts –> Frequency of each (dstport, protocol) pair.
 
 ## Lookup CSV Format
 
