@@ -15,8 +15,7 @@
 8. [Testing & Validation](#testing--validation)  
 9. [Assumptions & Limitations](#assumptions--limitations)  
 10. [Known Issues](#known-issues)  
-11. [References & Further Reading](#references--further-reading)  
-12. [License](#license)  
+11. [References & Further Reading](#references--further-reading) 
 
 ---
 
@@ -137,10 +136,11 @@ email,10
 Untagged,5
 
 Port/Protocol Combination Counts:
-Port,Protocol,Count
-443,tcp,15
-80,tcp,20
-25,tcp,10
+
+(Port,Protocol,Count)
+(443,tcp,15)
+(80,tcp,20)
+(25,tcp,10)
 
 ## Testing & Validation
 
